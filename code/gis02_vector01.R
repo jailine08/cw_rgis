@@ -1,0 +1,109 @@
+# Vector 1
+
+if (!require(pacman)) install.packages("pacman")
+
+pacman::p_load(tidyverse,
+               sf,
+               mapview)
+# erase all objects in the environment
+rm(list = ls())
+
+# read and export ---------------------------------------------------------
+
+## SHAPE format
+## how to read vector data
+sf_nc_county <- st_read(dsn = "data/nc.shp",
+        quiet = TRUE)
+
+## how to export shape files
+st_write(sf_nc_county,
+         dsn = "data/sf_nc_county.shp",
+         append = FALSE)
+
+## RDS format
+saveRDS(sf_nc_county,
+        file = "data/sf_nc_county.rds")
+
+sf_nc_county <- readRDS(file = "data/sf_nc_county.rds")
+
+# point -------------------------------------------------------------------
+
+sf_site <- readRDS("data/sf_finsync_nc.rds")
+
+mapview(
+  sf_site,
+  col.regions = "black", # point's fill color
+  legend = FALSE
+  )
+
+sf_site_f10 <- sf_site %>%
+  slice(1:10)
+mapview(
+  sf_site_f10,
+  col.regions = "black", #can pick any color
+  legend = FALSE
+)
+
+# line --------------------------------------------------------------------
+
+sf_str <- readRDS("data/sf_stream_gi.rds")
+mapview(
+  sf_str,
+  color = "purple",
+  legend = FALSE
+)
+
+# polygon -----------------------------------------------------------------
+
+sf_nc_county <- readRDS("data/sf_nc_county.rds")
+mapview(
+  sf_nc_county,
+  col.regions = "pink",
+  legend = FALSE
+)
+
+# choose "guilford" county, then map
+#"select" for column & #"filter" for row
+
+sf_nc_gi <- sf_nc_county %>%
+  filter(county =="guilford")
+mapview(sf_nc_gi,
+        col.regions = "yellow",
+        legend = FALSE)
+
+# static map in ggplot format ---------------------------------------------
+
+ggplot() +
+  geom_sf(data = sf_nc_county)
+
+ggplot() +
+  geom_sf(data = sf_nc_county) +
+  geom_sf(data = sf_str)
+
+ggplot() +
+  geom_sf(data = sf_nc_county) +
+  geom_sf(data = sf_str) +
+  geom_sf(data = sf_site)
+
+# Exercise 3.2.7 from chapter 3 -------------------------------------------
+
+# Question 1
+sf_str_as <- readRDS(file = "data/sf_stream_as.rds")
+
+# Question 2, YES they do.
+print(sf_str_as)
+print(sf_nc_county)
+
+# Question 3
+ggplot() +
+  geom_sf(data = sf_nc_county) +
+  geom_sf(data = sf_str_as)
+
+# Question 4
+sf_nc_as <- sf_nc_county %>%
+  filter(county == "ashe")
+
+ggplot() +
+  geom_sf(data = sf_nc_as) +
+  geom_sf(data = sf_str_as)
+
