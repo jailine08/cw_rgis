@@ -77,3 +77,39 @@ iris %>%
         fill = Species)
   )+
   geom_boxplot()
+
+
+# exercise ----------------------------------------------------------------
+
+#Q1 Using "iris" data, identify the longest Sepal.Length using arrange fucntion
+iris %>%
+  arrange(desc(Sepal.Length))
+
+#Q2 Using 'iris' data, filter individuals with Sepal.Width greater than 3.0
+iris %>%
+  filter(Sepal.Width > 3.0)
+
+#Q3 Using 'iris' data, select the columns "Petal.Length" and "Petal.Width",
+# and then arrange the descending order of rows by "Petal Length"
+# Assign the result of object "df_petal"
+
+df_petal <- iris %>%
+  select(Petal.Length, Petal.Width) %>%
+  arrange(desc(Petal.Length))
+
+#Q4 Calculate mean Sepal.Width by Species; assign the result to "df_mean"
+#- Hint group_by() and summarize()
+
+df_mean <- iris %>% 
+  group_by(Species) %>%
+  summarize(mean = mean(Sepal.Width))
+
+#Q5 Create a point figure of Petal.Width (y-axis) and Sepal.Width (y-axis)
+# with colors distinguishing species
+
+iris %>%
+  ggplot(aes(x = Sepal.Width,
+             y = Petal.Width,
+             color = Species)) +
+  geom_point()
+
