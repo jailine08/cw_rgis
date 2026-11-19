@@ -102,3 +102,16 @@ ggplot() +
   labs(x = "Air temperature",
        y = "Probability of occurrence") +
   theme_bw()
+
+# plan for data analysis --------------------------------------------------
+
+unique(df_finsync$latin)
+
+df_finsync %>%
+  group_by(latin) %>% 
+  summarize(n_present = n_distinct(site_id)) %>%
+  view()
+
+
+
+
